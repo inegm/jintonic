@@ -14,6 +14,16 @@ which is available online [here](http://www.dbdoty.com/Words/Primer_2.1.html)
 I strongly recommend his book : "The Just Intonation Primer". It is listed in
 the references below.
 
-**References**
+## Installing ##
 
-- http://www.dbdoty.com/Words/Primer1.html
+```
+pip install jintonic
+```
+
+## Documentation ##
+
+Full documentation is available [here](https://jintonic.readthedocs.io/en/latest/).
+
+## References ##
+
+David B. Doty's [Just Intonation Primer](http://www.dbdoty.com/Words/Primer1.html).
