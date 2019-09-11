@@ -20,11 +20,13 @@ _RATIO_FORMAT = re.compile(r"""
 """, re.VERBOSE | re.IGNORECASE)
 
 
-def primary_interval(prime_limit, max_pot_exp=500):
+def primary_interval(prime_limit, sub_harmonic=False, max_pot_exp=500):
     """Returns the primary interval for a given prime limit.
 
     :param prime_limit: A prime number
     :type prime_limit: int
+    :param sub_harmonic: Whether the primary interval is a harmonic primary
+        (the default) or a sub-harmonic primary.
     :param max_pot_exp: Maximum power of two exponent to limit iterations
     :type max_pot_exp: int
 
@@ -37,6 +39,9 @@ def primary_interval(prime_limit, max_pot_exp=500):
 
     >>> primary_interval(19)
     JustInterval(19, 16)
+
+    >>> primary_interval(3, sub_harmonic=True)
+    JustInterval(4, 3)
     """
     pot = 2
     exp = 2
@@ -44,6 +49,8 @@ def primary_interval(prime_limit, max_pot_exp=500):
     while (pot**exp < prime_limit) and (pot < max_pot):
         exp += 1
     pot = pot**(exp-1)
+    if sub_harmonic:
+        return JustInterval(prime_limit, pot).complement
     return JustInterval(prime_limit, pot)
 
 
