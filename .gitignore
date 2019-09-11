@@ -1,8 +1,5 @@
-__pycache__/
-*.py[cod]
+.DS_Store
+.idea/
+.vscode/
 venv/
-docs/build/
-MANIFEST
-build/
-dist/
-*.egg-info
+*.pyc
