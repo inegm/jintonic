@@ -1,23 +1,23 @@
 """Tools for dealing with harmonic series."""
+from __future__ import annotations
 
-from math import gcd
 from functools import reduce
+from math import gcd
+from typing import List
 
+from .intervals import JustInterval
 from .primes import lcm, prime_factors
 
 
-__version__ = '0.0.1'
-
-
-def tones_to_harmonic_segment(tones, sub=False):
+def tones_to_harmonic_segment(
+    tones: List[JustInterval],
+    sub: bool = False,
+) -> List[int]:
     """Converts a series of tones to a harmonic or sub-harmonic segment.
 
     :param tones: A series of tones.
-    :type tones: list of JustInterval
     :param sub: When True, returns a sub-harmonic segment. Else, a harmonic
         (overtone) segment.
-
-    :rtype: list of int
 
     **Examples**
 
@@ -37,8 +37,9 @@ def tones_to_harmonic_segment(tones, sub=False):
     >>> tones_to_harmonic_segment(tones)
     [4, 5, 6, 7]
 
-    # TODO I'm not convinced this example (from p. 29) is correct
-    # give an example of a subharmonic segment that works
+    TODO I'm not convinced this example (from p. 29) is correct, give an example
+    of a subharmonic segment that works.
+
     >> tones = []
     >> tones.append(JustInterval(21, 20))
     >> tones.append(JustInterval(6, 5))
@@ -47,13 +48,13 @@ def tones_to_harmonic_segment(tones, sub=False):
     [8, 7, 6]
     """
     if sub:
-        tones = [(tone.denominator, tone.numerator) for tone in tones]
+        _tones = [(tone.denominator, tone.numerator) for tone in tones]
     else:
-        tones = [(tone.numerator, tone.denominator) for tone in tones]
+        _tones = [(tone.numerator, tone.denominator) for tone in tones]
 
-    lcm_tones = lcm((tone[1] for tone in tones))
+    lcm_tones = lcm([tone[1] for tone in _tones])
     # print(lcm_tones)
-    segment = [tone[0] * (lcm_tones // tone[1]) for tone in tones]
+    segment = [tone[0] * (lcm_tones // tone[1]) for tone in _tones]
     # print(segment)
     gcd_segment = reduce(gcd, segment)
     segment = [harmonic // gcd_segment for harmonic in segment]
@@ -61,7 +62,7 @@ def tones_to_harmonic_segment(tones, sub=False):
         segment.reverse()
     for i, harmonic in enumerate(segment):
         try:
-            if harmonic / 2 == segment[i+1] - 1:
+            if harmonic / 2 == segment[i + 1] - 1:
                 segment[i] = harmonic // 2
         except IndexError:
             continue
@@ -70,29 +71,23 @@ def tones_to_harmonic_segment(tones, sub=False):
     return segment
 
 
-def harmonic_to_identity(harmonic):
+def harmonic_to_identity(harmonic: int) -> int:
     """Converts a harmonic number to its tone identity.
 
     :param harmonic: A harmonic number
-    :type harmonic: int
-
-    :rtype: int
 
     **Examples**
 
     >>> harmonic_to_identity(6)
     3
     """
-    return harmonic // (2**(prime_factors(harmonic).count(2)))
+    return harmonic // (2 ** (prime_factors(harmonic).count(2)))
 
 
-def harmonic_segment_to_identities(segment):
+def harmonic_segment_to_identities(segment: List[int]) -> List[int]:
     """Converts a harmonic or sub-harmonic segment to its tone identities.
 
     :param segment: A harmonic, or sub-harmonic, segment
-    :type segment: list of int
-
-    :rtype: list of int
 
     **Examples**
 

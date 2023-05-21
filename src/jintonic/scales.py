@@ -1,23 +1,21 @@
 """Implements just intonation arbitrary and tetrachordal scales."""
+from __future__ import annotations
 
 from itertools import permutations, product
+from typing import List, Optional
 
 from .intervals import JustInterval
 from .primes import is_prime
 
 
-__version__ = '0.0.1'
-
-
-class JustScale():
+class JustScale:
     """This class implements arbitrary just intonation scales."""
 
-    def __init__(self, tones=None):
+    def __init__(self, tones: List[JustInterval]):
         """Initializes a JustScale.
 
         :param tones: A list of intervals or an object containing
             a list of intervals (that implements the attribute intervals)
-        :type tones: list
 
         **Examples**
 
@@ -27,19 +25,12 @@ class JustScale():
         >>> scale
         JustScale([1/1, 3/2, 2/1])
         """
-        self._tones = None
-        self._pitch_mapping = None
+        self._tones = tones
 
-        try:
-            self.tones = tones.intervals
-        except AttributeError:
-            self.tones = tones
-
-    def append(self, other):
+    def append(self, tone: JustInterval):
         """Appends tones to the scale.
 
         :param other: A new tone
-        :type other: JustInterval
 
         **Examples**
 
@@ -48,13 +39,13 @@ class JustScale():
         >>> scale.tones
         [JustInterval(4, 3), JustInterval(3, 2)]
         """
-        if not isinstance(other, JustInterval):
-            msg = 'cannot append type {}. '.format(type(other))
+        if not isinstance(tone, JustInterval):
+            msg = "cannot append type {}. ".format(type(tone))
             msg += 'Expecting type "JustInterval"'
             raise ValueError(msg)
-        self._tones.append(other)
+        self._tones.append(tone)
 
-    def hertz(self, fundamental):
+    def hertz(self, fundamental: float) -> List[float]:
         """Translates scale intervals to pitches in Hertz over a fundamental
 
         .. note::
@@ -64,31 +55,29 @@ class JustScale():
             tones, the fundamental will not be part of the scale.
 
         :param fundamental: The scale's 0 degree (fundamental) pitch in Hertz.
-        :type fundamental: float
         """
         return [fundamental * tone for tone in self.tones]
 
     @property
-    def tones(self):
+    def tones(self) -> List[JustInterval]:
         """JustScale tones.
 
         :param values: A list of tones
-        :type values: list of JustInterval
         """
         return sorted(self._tones)
 
     @tones.setter
-    def tones(self, values):
+    def tones(self, values: List[JustInterval]):
         """Sets JustScale tones."""
         for tone in values:
             if not isinstance(tone, JustInterval):
-                msg = 'tones must be a list of JustIntervals. '
+                msg = "tones must be a list of JustIntervals. "
                 msg += "Got '{}'".format(values)
                 raise ValueError(msg)
         self._tones = values
 
     @property
-    def intervals(self):
+    def intervals(self) -> List[JustInterval]:
         """JustScale intervals.
 
         **Examples**
@@ -99,13 +88,10 @@ class JustScale():
         >>> scale.intervals
         [JustInterval(3, 2), JustInterval(4, 3)]
         """
-        return [
-            tone - self.tones[i-1]
-            for i, tone in enumerate(self.tones)
-        ][1:]
+        return [tone - self.tones[i - 1] for i, tone in enumerate(self.tones)][1:]
 
     @property
-    def complement(self):
+    def complement(self) -> JustScale:
         """JustScale complement
 
         :rtype: JustScale
@@ -122,53 +108,30 @@ class JustScale():
         return JustScale(tones)
 
     @property
-    def prime_limit(self):
-        """JustScale prime limit
-
-        :rtype: int
-        """
+    def prime_limit(self) -> int:
+        """JustScale prime limit"""
         return max([tone.prime_limit for tone in self.tones])
-
-    @property
-    def pitch_mapping(self):
-        """Mapping of pitches to notation strings.
-
-        :param values: A list, equal in length to the scale's list of
-            intervals, containing lilypond string representations of the notes
-            to be used in notation for each pitch.
-        :type values: list of str
-        """
-        # TODO Default pitch mapper
-        # Create a default pitch mapper. For example: if there are 8 pitches,
-        # use the diatonic C representations. If 12, then use chromatic with
-        # the lilpypond default for twelve-tone (all sharps ?). Otherwise,
-        # keep the fifth and "perfect" intervals, then use accidentals. Etc.
-        return self.pitch_mapping
-
-    @pitch_mapping.setter
-    def pitch_mapping(self, values):
-        """Set a scale's pitch mapping."""
-        if len(values) != self.tones:
-            msg = 'length mismatch. Must map one to one with intervals.'
-            raise ValueError(msg)
-        for value in values:
-            if not isinstance(value, str):
-                # TODO Validate lilypond note values
-                raise ValueError('invalid mapping.')
 
     def __repr__(self):
         """repr(self)"""
-        pitches = ', '.join([
-            '/'.join([str(tone.numerator), str(tone.denominator)])
-            for tone in self.tones
-        ])
+        pitches = ", ".join(
+            [
+                "/".join([str(tone.numerator), str(tone.denominator)])
+                for tone in self.tones
+            ]
+        )
         return "{}([{}])".format(self.__class__.__name__, pitches)
 
 
-class JustTetrachord():
+class JustTetrachord:
     """This class implements disjunct just intonation tetrachords."""
 
-    def __init__(self, intervals=None, genus=None, prime_limit=7):
+    def __init__(
+        self,
+        intervals: Optional[List[JustInterval]] = None,
+        genus: Optional[str] = None,
+        prime_limit: int = 7,
+    ):
         """Initializes a JustTetrachord.
 
         A JustTetrachord can be constructed in one of two ways :
@@ -177,11 +140,8 @@ class JustTetrachord():
             - from a list of intervals between each successive tone
 
         :param intervals: A list of intervals
-        :type intervals: :class:`justintonation.intervals.JustInterval`
         :param genus: One of 'enharmonic', 'chromatic', or 'diatonic'
-        :type genus: str
         :param prime_limit: The prime limit to respect
-        :type prime_limit: int
 
         **Examples**
 
@@ -203,7 +163,7 @@ class JustTetrachord():
         31
         """
         if not is_prime(prime_limit):
-            msg = 'The prime limit must be a prime number. '
+            msg = "The prime limit must be a prime number. "
             msg += "Got: '{}'".format(prime_limit)
             raise ValueError(msg)
         self._prime_limit = prime_limit
@@ -213,13 +173,13 @@ class JustTetrachord():
         elif genus is not None:
             self.genus = genus.strip().lower()
         else:
-            self._intervals = []
+            self._intervals: List[JustInterval] = []
 
     @classmethod
     def validate_tetrachord(cls, value):
         """Validates a tetrachord."""
         if len(value) != 3:
-            msg = 'Tetrachords must be formed of exactly three intervals. '
+            msg = "Tetrachords must be formed of exactly three intervals. "
             msg += 'Got: "{}"'.format(value)
             raise ValueError(msg)
         try:
@@ -227,7 +187,7 @@ class JustTetrachord():
         except TypeError:
             total_interval = sum(value.intervals)
         if total_interval != JustInterval(4, 3):
-            msg = 'Tetrachord intervals must sum to JustInterval(4, 3). '
+            msg = "Tetrachord intervals must sum to JustInterval(4, 3). "
             msg += 'Got: "{}"'.format(sum(value))
             raise ValueError(msg)
 
@@ -250,9 +210,7 @@ class JustTetrachord():
         """Set JustTetrachord intervals."""
         self.validate_tetrachord(values)
         self._prime_limit = max(
-            values[0].prime_limit,
-            values[1].prime_limit,
-            values[2].prime_limit
+            values[0].prime_limit, values[1].prime_limit, values[2].prime_limit
         )
         self._intervals = values
 
@@ -271,25 +229,21 @@ class JustTetrachord():
         :type value: str
         """
         if not self.intervals:
-            raise ValueError('Undefined intervals')
-        end_intervals = [
-            JustInterval(5, 4),
-            JustInterval(6, 5),
-            JustInterval(10, 9)
-        ]
-        genera = ['enharmonic', 'chromatic', 'diatonic']
+            raise ValueError("Undefined intervals")
+        end_intervals = [JustInterval(5, 4), JustInterval(6, 5), JustInterval(10, 9)]
+        genera = ["enharmonic", "chromatic", "diatonic"]
         try:
             return genera[end_intervals.index(self.intervals[-1])]
         except ValueError:
-            return 'non-classical'
+            return "non-classical"
 
     @genus.setter
     def genus(self, value):
         """Set JustTetrachord genus."""
         characteristic_intervals = {
-            'enharmonic': JustInterval(5, 4),
-            'chromatic': JustInterval(6, 5),
-            'diatonic': JustInterval(10, 9)
+            "enharmonic": JustInterval(5, 4),
+            "chromatic": JustInterval(6, 5),
+            "diatonic": JustInterval(10, 9),
         }
         characteristic = characteristic_intervals[value]
         remainder = JustInterval(4, 3) - characteristic
@@ -309,7 +263,7 @@ class JustTetrachord():
         :rtype: list of JustTetrachord
         """
         return [
-            JustTetrachord(intervals=permutation)
+            JustTetrachord(intervals=list(permutation))
             for permutation in permutations(self.intervals)
         ]
 
@@ -323,7 +277,7 @@ class JustTetrachord():
             self.intervals[1].denominator,
             self.intervals[1].numerator,
             self.intervals[2].denominator,
-            self.intervals[2].numerator
+            self.intervals[2].numerator,
         )
 
     def __eq__(self, other):
@@ -335,10 +289,10 @@ class JustTetrachord():
         return len(self.intervals)
 
 
-class JustTetrachordalScale():
+class JustTetrachordalScale:
     """This class implements disjunct just intonation tetrachordal scales."""
 
-    def __init__(self, lower, upper=None):
+    def __init__(self, lower: JustTetrachord, upper: Optional[JustTetrachord] = None):
         """Initializes a JustTetrachordalScale.
 
         :param lower: The lower tetrachord
@@ -353,14 +307,12 @@ class JustTetrachordalScale():
         >>> JustTetrachordalScale(JustTetrachord(genus='enharmonic'))
          JustTetrachordalScale([46/45, 24/23, 5/4, 9/8, 46/45, 24/23, 5/4])
         """
-        self._lower = None
-        self._upper = None
 
-        self.lower = lower
+        self._lower = lower
         if upper is None:
-            self.upper = lower
+            self._upper = lower
         else:
-            self.upper = upper
+            self._upper = upper
 
     @property
     def lower(self):
@@ -391,7 +343,7 @@ class JustTetrachordalScale():
         self._upper = value
 
     @property
-    def intervals(self):
+    def intervals(self) -> List[JustInterval]:
         """JustTetrachordalScale intervals.
 
         **Examples**
@@ -401,11 +353,7 @@ class JustTetrachordalScale():
         JustInterval(9, 8), JustInterval(16, 15), JustInterval(9, 8),
         JustInterval(10, 9)]
         """
-        return (
-            self.lower.intervals +
-            [JustInterval(9, 8)] +
-            self.upper.intervals
-        )
+        return self.lower.intervals + [JustInterval(9, 8)] + self.upper.intervals
 
     @property
     def complement(self):
@@ -436,8 +384,9 @@ class JustTetrachordalScale():
         """
         tones = [JustInterval(1, 1)]
         tones += [
-            JustInterval(1, 1) + sum(self.intervals[:i])
-            for i in range(1, len(self.intervals))]
+            sum(self.intervals[:i], start=JustInterval(1, 1))
+            for i in range(1, len(self.intervals))
+        ]
         tones += [JustInterval(2, 1)]
         return tones
 
@@ -493,10 +442,7 @@ class JustTetrachordalScale():
         """
         return [
             JustTetrachordalScale(pair[0], pair[1])
-            for pair in product(
-                self.lower.permutations,
-                self.upper.permutations
-            )
+            for pair in product(self.lower.permutations, self.upper.permutations)
         ]
 
     @property
@@ -519,17 +465,19 @@ class JustTetrachordalScale():
     def pitch_mapping(self, values):
         """Set a scale's pitch mapping."""
         if len(values) != self.tones:
-            msg = 'length mismatch. Must map one to one with intervals.'
+            msg = "length mismatch. Must map one to one with intervals."
             raise ValueError(msg)
         for value in values:
             if not isinstance(value, str):
                 # TODO Validate lilypond note values
-                raise ValueError('invalid mapping.')
+                raise ValueError("invalid mapping.")
 
     def __repr__(self):
         """repr(self)"""
-        pitches = ', '.join([
-            '/'.join([str(interval.numerator), str(interval.denominator)])
-            for interval in self.intervals
-        ])
+        pitches = ", ".join(
+            [
+                "/".join([str(interval.numerator), str(interval.denominator)])
+                for interval in self.intervals
+            ]
+        )
         return "{}([{}])".format(self.__class__.__name__, pitches)

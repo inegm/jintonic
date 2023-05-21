@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jintonic"
+authors = [
+  { name="Ismail Negm" },
+]
+description = "Utilities for computer assisted composition in just intonation"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dynamic = ["dependencies", "version"]
+
+[project.scripts]
+jintonic = "jintonic.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
+version = {attr = "jintonic.__version__"}
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+pretty = false
+ignore_missing_imports = false
+
+[tool.pytest.ini_options]
+doctest_optionflags = "NORMALIZE_WHITESPACE"

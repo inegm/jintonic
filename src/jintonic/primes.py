@@ -1,19 +1,14 @@
 """Prime number operations used for just intonation."""
 
-from math import gcd
 from functools import reduce
+from math import gcd
+from typing import List
 
 
-__version__ = '0.0.1'
-
-
-def is_prime(number):
+def is_prime(number: int) -> bool:
     """States if a number is prime.
 
     :param number: A number
-    :type number: int
-
-    :rtype: bool
 
     **Examples**
 
@@ -29,13 +24,10 @@ def is_prime(number):
     return True
 
 
-def generate_primes(limit):
+def generate_primes(limit: int) -> List[int]:
     """Generates primes up to a given limit.
 
     :param limit: The limit.
-    :type limit: int
-
-    :rtype: list of int
 
     **Examples**
 
@@ -45,13 +37,10 @@ def generate_primes(limit):
     return [n for n in range(2, limit + 1) if is_prime(n)]
 
 
-def prime_factors(number):
+def prime_factors(number: int) -> List[int]:
     """Finds prime factors of an integer (by trial-division).
 
     :param number: The integer to factor
-    :type number: int
-
-    :rtype: list of ints
 
     **Examples**
 
@@ -75,13 +64,10 @@ def prime_factors(number):
     return factors
 
 
-def lcm(numbers):
+def lcm(numbers: List[int]) -> int:
     """Least common multiple of a list of integers.
 
     :param numbers: List of integers
-    :type numbers: list of int
-
-    :rtype: int
 
     **Examples**
 

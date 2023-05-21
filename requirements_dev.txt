@@ -1,0 +1,9 @@
+build
+# checks
+black
+isort
+mypy
+pylint
+ruff
+# tests
+pytest
