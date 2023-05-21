@@ -1,0 +1,22 @@
+site_name: jintonic
+repo_url: https://github.com/inegm/jintonic
+nav:
+  - jintonic: "index.md"
+  - API:
+      - chords: "api/chords.md"
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            annotations_path: brief
+            show_bases: true
+            show_docstring_examples: true

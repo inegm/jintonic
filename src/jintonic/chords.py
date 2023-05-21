@@ -21,15 +21,15 @@ class JustLatticeChord:
     ):
         """Initializes a JustLatticeChord.
 
-        :param fundamental: Fundamental pitch in Hertz.
-        :param root: Root lattice node (the chord's root tone)
-        :param nodes: Lattice nodes of each constituent chord tone.
+        Parameters:
+            fundamental: Fundamental pitch in Hertz.
+            root: Root lattice node (the chord's root tone)
+            nodes: Lattice nodes of each constituent chord tone.
 
-        **Examples**
-
-        >>> nodes = [[-1, 0, 1], [1, 0, 0], [0, 0, 1]]
-        >>> JustLatticeChord(fundamental=100.0, root=[1, 0, 0], nodes=nodes)
-        JustLatticeChord(100.0 Hz, [3/2, 7/4, 9/8, 21/16], [3-7-9-21])
+        Examples:
+            >>> nodes = [[-1, 0, 1], [1, 0, 0], [0, 0, 1]]
+            >>> JustLatticeChord(fundamental=100.0, root=[1, 0, 0], nodes=nodes)
+            JustLatticeChord(100.0 Hz, [3/2, 7/4, 9/8, 21/16], [3-7-9-21])
         """
         self._fundamental: float = float(fundamental)
         self._nodes = nodes
@@ -45,31 +45,39 @@ class JustLatticeChord:
     ) -> JustLatticeChord:
         """Initializes a JustLatticeChord from a conventional chord name.
 
+        Parameters:
+            fundamental: The fundamental frequency in Hertz
+            root: The root node lattice coordinates
+            name: The chord name
+
+        Returns:
+            A JustLatticeChord
+
         The list of valid names is:
-            "sub-minor triad"
-            "minor triad"
-            "diminished triad"
-            "major triad"
-            "sub-minor seventh"
-            "minor seventh"
-            "half-diminished seventh"
-            "major seventh"
-            "super-major seventh"
-            "dominant seventh"
-            "added second"
-            "minor ninth"
-            "major ninth"
-            "dominant ninth"
-            "4-6-7"
-            "5-7-9"
+            - "sub-minor triad"
+            - "minor triad"
+            - "diminished triad"
+            - "major triad"
+            - "sub-minor seventh"
+            - "minor seventh"
+            - "half-diminished seventh"
+            - "major seventh"
+            - "super-major seventh"
+            - "dominant seventh"
+            - "added second"
+            - "minor ninth"
+            - "major ninth"
+            - "dominant ninth"
+            - "4-6-7"
+            - "5-7-9"
 
-        **Examples**
+        Examples:
 
-        >>> JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
-        JustLatticeChord(60.0 Hz, [1/1, 6/5, 3/2], [5-3-15])
+            >>> JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
+            JustLatticeChord(60.0 Hz, [1/1, 6/5, 3/2], [5-3-15])
 
-        >>> JustLatticeChord.from_name(60, [-1, 0, 0], 'major triad')
-        JustLatticeChord(60.0 Hz, [4/3, 5/3, 1/1], [1-5-3])
+            >>> JustLatticeChord.from_name(60, [-1, 0, 0], 'major triad')
+            JustLatticeChord(60.0 Hz, [4/3, 5/3, 1/1], [1-5-3])
         """
         nodes = {
             "sub-minor triad": [[1, 0, 0], [-1, 0, 1]],
@@ -97,16 +105,20 @@ class JustLatticeChord:
     def transpose(self, node: List[int]) -> JustLatticeChord:
         """JustLatticeChord transposition.
 
-        Returns a copy
+        Parameters:
+            node: The target root node of the transposed chord.
 
-        :param node: The target root node of the transposed chord.
+        Returns:
+            A transposed JustLatticeChord
 
-        **Examples**
+        Note:
+            Returns a copy
 
-        >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
-        >>> node = [1, 0, 0]
-        >>> chord.transpose(node)
-        JustLatticeChord(60.0 Hz, [3/2, 9/5, 9/8], [5-3-15])
+        Examples:
+            >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
+            >>> node = [1, 0, 0]
+            >>> chord.transpose(node)
+            JustLatticeChord(60.0 Hz, [3/2, 9/5, 9/8], [5-3-15])
         """
         chord = deepcopy(self)
         chord.root = node
@@ -117,15 +129,19 @@ class JustLatticeChord:
     def pivot(self, axis: int = 3) -> JustLatticeChord:
         """Pivots the JustLatticeChord along the given axis.
 
-        Returns a copy.
+        Parameters:
+            axis: Prime limit axis (a prime number)
 
-        :param axis: Prime limit axis (a prime number)
+        Returns:
+            A pivoted JustLatticeChord
 
-        **Examples**
+        Note:
+            Returns a copy
 
-        >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'major triad')
-        >>> chord.pivot(3)
-        JustLatticeChord(60.0 Hz, [1/1, 5/4, 4/3], [3-15-1])
+        Examples:
+            >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'major triad')
+            >>> chord.pivot(3)
+            JustLatticeChord(60.0 Hz, [1/1, 5/4, 4/3], [3-15-1])
         """
         if axis > self.prime_limit:
             raise ValueError(
@@ -146,14 +162,16 @@ class JustLatticeChord:
 
     @property
     def nodes(self):
-        """JustLatticeChord nodes.
-
-        :param values: Constituent lattice nodes.
-        """
+        """JustLatticeChord nodes."""
         return self._nodes
 
     @nodes.setter
     def nodes(self, values: List[List[int]]):
+        """JustLatticeChord nodes.
+
+        Parameters:
+            values: Constituent lattice nodes.
+        """
         """Sets (and expands) JustLatticeChord nodes."""
         max_len = max((len(node) for node in values))
         self._nodes = []
@@ -162,15 +180,16 @@ class JustLatticeChord:
 
     @property
     def root(self):
-        """JustLatticeChord root node.
-
-        :param value: Root lattice node
-        """
+        """JustLatticeChord root node."""
         return self._root
 
     @root.setter
     def root(self, value: List[int]):
-        """Sets (and expands) JustLatticeChord root node."""
+        """Sets (and expands) JustLatticeChord root node.
+
+        Parameters:
+            value: Root lattice node
+        """
         max_len = max((len(node) for node in self._nodes))
         self._root = value + (max_len - len(value)) * [0]
 
@@ -178,11 +197,13 @@ class JustLatticeChord:
     def tones(self) -> List[JustInterval]:
         """JustLatticeChord constituent intervals from root (tones).
 
-        **Examples**
+        Returns:
+            The tones of the chord as JustIntervals from the fundamental.
 
-        >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'major triad')
-        >>> chord.tones
-        [JustInterval(1, 1), JustInterval(5, 4), JustInterval(3, 2)]
+        Examples:
+            >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'major triad')
+            >>> chord.tones
+            [JustInterval(1, 1), JustInterval(5, 4), JustInterval(3, 2)]
         """
         tones = []
         self.lattice.to_node(self._root)
@@ -206,11 +227,13 @@ class JustLatticeChord:
     def harmonics(self) -> List[int]:
         """JustLatticeChord harmonics (relative frequencies).
 
-        **Examples**
+        Returns:
+            The lattice's prime limit
 
-        >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
-        >>> chord.harmonics
-        [10, 12, 15]
+        Examples:
+            >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
+            >>> chord.harmonics
+            [10, 12, 15]
         """
         return tones_to_harmonic_segment(self.tones)
 
@@ -218,11 +241,13 @@ class JustLatticeChord:
     def identities(self) -> List[int]:
         """JustLatticeChord constituent identities.
 
-        **Examples**
+        Returns:
+            The constituent identities
 
-        >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
-        >>> chord.identities
-        [5, 3, 15]
+        Examples:
+            >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
+            >>> chord.identities
+            [5, 3, 15]
         """
         return harmonic_segment_to_identities(self.harmonics)
 
@@ -230,11 +255,13 @@ class JustLatticeChord:
     def hertz(self) -> List[float]:
         """JustLatticeChord constituent Hertz values.
 
-        **Examples**
+        Returns:
+            The frequencies in Hertz of the constituent pitches
 
-        >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
-        >>> chord.hertz
-        [60.0, 72.0, 90.0]
+        Examples:
+            >>> chord = JustLatticeChord.from_name(60, [0, 0, 0], 'minor triad')
+            >>> chord.hertz
+            [60.0, 72.0, 90.0]
         """
         tones = [self.tones[0]]
         for tone in self.tones[1:]:
@@ -249,13 +276,16 @@ class JustLatticeChord:
 
         Every node's relationship to the root node is inverted.
 
-        Returns a copy.
+        Returns:
+            A JustLatticeChord that is the complement of this one
 
-        **Examples**
+        Note:
+            Returns a copy.
 
-        >>> chord = JustLatticeChord(60, [0, 0, 0], [[2, 0], [0, 1], [-1, 0], [1, 0]])
-        >>> chord.complement
-        JustLatticeChord(60.0 Hz, [1/1, 16/9, 8/5, 3/2, 4/3], [45-5-9-135-15])
+        Examples:
+            >>> chord = JustLatticeChord(60, [0, 0, 0], [[2, 0], [0, 1], [-1, 0], [1, 0]])
+            >>> chord.complement
+            JustLatticeChord(60.0 Hz, [1/1, 16/9, 8/5, 3/2, 4/3], [45-5-9-135-15])
         """
         nodes = []
         for node in self._nodes:
@@ -263,10 +293,7 @@ class JustLatticeChord:
         return JustLatticeChord(self._fundamental, self._root, nodes)
 
     def __repr__(self):
-        """repr(self)
-
-        (<fundamental> Hz, [<tones>], [<identities>])
-        """
+        """repr(self)"""
         tones = ", ".join(
             [
                 "/".join([str(tone.numerator), str(tone.denominator)])
