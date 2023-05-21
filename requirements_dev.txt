@@ -1,4 +1,5 @@
 build
+twine
 # checks
 black
 isort
