@@ -1,15 +1,12 @@
-name: ci
+name: publish
 
 on:
   push:
-    branches: 
-      - dev
-  pull_request:
-    branches: 
-      - dev
+    branches:
+      - main
 
 jobs:
-  checks-and-tests:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,5 +14,4 @@ jobs:
         with:
           python-version: 3.x
       - run: pip install -r requirements_dev.txt
-      - run: make checks
-      - run: make tests
+      - run: make release
