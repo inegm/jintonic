@@ -1,5 +1,5 @@
 TOP_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-.SILENT: checks black isort mypy ruff pylint tests build publish
+.SILENT: checks black isort mypy ruff pylint tests build release package publish
 
 checks: black isort mypy ruff pylint
 
@@ -34,6 +34,8 @@ pylint:
 tests:
 	echo "- Running doctests ..."
 	pytest --maxfail 1 --doctest-modules src/jintonic/
+
+build: checks tests package
 
 release: checks tests package publish
 

@@ -13,13 +13,13 @@ class JustLattice:
     def __init__(self, fundamental: float, prime_limit: int = 7):
         """Initializes a JustLattice.
 
-        :param prime_limit: The prime limit. A prime number.
-        :param fundamental: The 1/1 pitch in Hertz
+        Parameters:
+            prime_limit: The prime limit. A prime number.
+            fundamental: The 1/1 pitch in Hertz
 
-        **Examples**
-
-        >>> JustLattice(60)
-        JustLattice(60.0 Hz, 1/1, 60.0 Hz)
+        Examples:
+            >>> JustLattice(60)
+            JustLattice(60.0 Hz, 1/1, 60.0 Hz)
         """
         self._fundamental: float = float(fundamental)
         self._prime_limit: int = prime_limit
@@ -31,30 +31,30 @@ class JustLattice:
     def traverse(self, vector: List[int]):
         """Traverses a just intonation lattice.
 
-        :param vector: Number of steps along each axis. Steps are assigned to
-            an axis based on position. The first argument is on the three-limit
-            axis, the second on the five-limit, third on the seven-limit,
-            etc. To stay in place on an axis, pass 0 for that axis.
+        Parameters:
+            vector: Number of steps along each axis. Steps are assigned to
+                an axis based on position. The first argument is on the three-limit
+                axis, the second on the five-limit, third on the seven-limit,
+                etc. To stay in place on an axis, pass 0 for that axis.
 
-        **Examples**
-
-        >>> lattice = JustLattice(60)
-        >>> lattice.traverse([1, 0, 0])
-        JustLattice(60.0 Hz, 3/2, 90.0 Hz)
-        >>> lattice.traverse([-2, 0, 0])
-        JustLattice(60.0 Hz, 4/3, 80.0 Hz)
-        >>> lattice.traverse([1, 1, 0])
-        JustLattice(60.0 Hz, 5/4, 75.0 Hz)
-        >>> lattice.traverse([0, -2, 0])
-        JustLattice(60.0 Hz, 8/5, 96.0 Hz)
-        >>> lattice.traverse([0, 1, 1])
-        JustLattice(60.0 Hz, 7/4, 105.0 Hz)
-        >>> lattice.traverse([0, 0, -2])
-        JustLattice(60.0 Hz, 8/7, 68.5714 Hz)
-        >>> lattice.traverse([2, 0, 1])
-        JustLattice(60.0 Hz, 9/8, 67.5 Hz)
-        >>> lattice.traverse([-4, 0, 0])
-        JustLattice(60.0 Hz, 16/9, 106.6667 Hz)
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> lattice.traverse([1, 0, 0])
+            JustLattice(60.0 Hz, 3/2, 90.0 Hz)
+            >>> lattice.traverse([-2, 0, 0])
+            JustLattice(60.0 Hz, 4/3, 80.0 Hz)
+            >>> lattice.traverse([1, 1, 0])
+            JustLattice(60.0 Hz, 5/4, 75.0 Hz)
+            >>> lattice.traverse([0, -2, 0])
+            JustLattice(60.0 Hz, 8/5, 96.0 Hz)
+            >>> lattice.traverse([0, 1, 1])
+            JustLattice(60.0 Hz, 7/4, 105.0 Hz)
+            >>> lattice.traverse([0, 0, -2])
+            JustLattice(60.0 Hz, 8/7, 68.5714 Hz)
+            >>> lattice.traverse([2, 0, 1])
+            JustLattice(60.0 Hz, 9/8, 67.5 Hz)
+            >>> lattice.traverse([-4, 0, 0])
+            JustLattice(60.0 Hz, 16/9, 106.6667 Hz)
         """
         primary_intervals = [
             primary_interval(prime) for prime in generate_primes(self.prime_limit)[1:]
@@ -77,18 +77,18 @@ class JustLattice:
 
         return self
 
-    def undo(self, steps=1):
+    def undo(self, steps: int = 1):
         """Undo a traversal.
 
-        :param steps: Number of steps to undo
+        Parameters:
+            steps: Number of steps to undo
 
-        **Examples**
-
-        >>> lattice = JustLattice(60)
-        >>> lattice.traverse([1, 0, 0])
-        JustLattice(60.0 Hz, 3/2, 90.0 Hz)
-        >>> lattice.undo(1)
-        JustLattice(60.0 Hz, 1/1, 60.0 Hz)
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> lattice.traverse([1, 0, 0])
+            JustLattice(60.0 Hz, 3/2, 90.0 Hz)
+            >>> lattice.undo(1)
+            JustLattice(60.0 Hz, 1/1, 60.0 Hz)
         """
         for _ in range(steps):
             vector = self._path.pop()
@@ -99,13 +99,12 @@ class JustLattice:
     def to_fundamental(self):
         """Return to 1/1 without losing path history.
 
-        **Examples**
-
-        >>> lattice = JustLattice(60)
-        >>> lattice.traverse([1, 0, 0])
-        JustLattice(60.0 Hz, 3/2, 90.0 Hz)
-        >>> lattice.to_fundamental()
-        JustLattice(60.0 Hz, 1/1, 60.0 Hz)
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> lattice.traverse([1, 0, 0])
+            JustLattice(60.0 Hz, 3/2, 90.0 Hz)
+            >>> lattice.to_fundamental()
+            JustLattice(60.0 Hz, 1/1, 60.0 Hz)
         """
         axes = len(self._node)
         root_node = [0] * axes
@@ -128,13 +127,12 @@ class JustLattice:
     def to_node(self, node: List[int]):
         """Traverse to a specific node.
 
-        **Examples**
-
-        >>> lattice = JustLattice(60)
-        >>> lattice.traverse([1, 0, 0])
-        JustLattice(60.0 Hz, 3/2, 90.0 Hz)
-        >>> lattice.to_node([0, 0, 0])
-        JustLattice(60.0 Hz, 1/1, 60.0 Hz)
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> lattice.traverse([1, 0, 0])
+            JustLattice(60.0 Hz, 3/2, 90.0 Hz)
+            >>> lattice.to_node([0, 0, 0])
+            JustLattice(60.0 Hz, 1/1, 60.0 Hz)
         """
         self.to_fundamental()
         self.traverse(node)
@@ -145,18 +143,29 @@ class JustLattice:
     def prime_limit(self) -> int:
         """The prime limit.
 
-        :param value: A prime number.
+        Returns:
+            The prime limit of the lattice
 
-        **Examples**
-
-        >>> JustLattice(60).prime_limit
-        7
+        Examples:
+            >>> JustLattice(60).prime_limit
+            7
         """
         return self._prime_limit
 
     @prime_limit.setter
     def prime_limit(self, value: int):
-        """Sets the prime limit."""
+        """The prime limit.
+
+        Parameters:
+            value: A prime number.
+
+        Returns:
+            The prime limit of the lattice
+
+        Examples:
+            >>> JustLattice(60).prime_limit
+            7
+        """
         if not is_prime(value):
             msg = "Prime limit must be a prime number. "
             msg += "Got '{}'".format(value)
@@ -166,12 +175,12 @@ class JustLattice:
     def fundamental(self) -> float:
         """Fundamental (1/1) pitch in Hertz.
 
-        :param value: Fundamental (1/1) pitch in Hertz
+        Returns:
+            The fundamental's frequency in Hertz
 
-        **Examples**
-
-        >>> JustLattice(60.0).fundamental
-        60.0
+        Examples:
+            >>> JustLattice(60.0).fundamental
+            60.0
         """
         return self._fundamental
 
@@ -189,11 +198,13 @@ class JustLattice:
     def hertz(self) -> float:
         """Current node's pitch in Hertz.
 
-        **Examples**
+        Returns:
+            The current node's pitch in Hertz
 
-        >>> lattice = JustLattice(60)
-        >>> lattice.traverse([1, 0, 0]).hertz
-        90.0
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> lattice.traverse([1, 0, 0]).hertz
+            90.0
         """
         return self._fundamental * self._tone
 
@@ -201,11 +212,13 @@ class JustLattice:
     def cents(self) -> float:
         """Current node's interval in Cents.
 
-        **Examples**
+        Returns:
+            The current node's interval in Cents
 
-        >>> lattice = JustLattice(60)
-        >>> round(lattice.traverse([1, 0, 0]).cents, 3)
-        701.955
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> round(lattice.traverse([1, 0, 0]).cents, 3)
+            701.955
         """
         return self._tone.cents
 
@@ -213,11 +226,13 @@ class JustLattice:
     def tone(self) -> JustInterval:
         """Current node's tone.
 
-        **Examples**
+        Returns:
+            The current node's tone as a JustInterval
 
-        >>> lattice = JustLattice(60)
-        >>> lattice.traverse([1, 0, 0]).tone
-        JustInterval(3, 2)
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> lattice.traverse([1, 0, 0]).tone
+            JustInterval(3, 2)
         """
         return self._tone
 
@@ -225,11 +240,13 @@ class JustLattice:
     def node(self) -> List[int]:
         """Current node as a vector with length equivalent to number of axes.
 
-        **Examples**
+        Returns:
+            The current node as a vector with length equivalent to number of axes
 
-        >>> lattice = JustLattice(60)
-        >>> lattice.traverse([0, 2, 3]).node
-        [0, 2, 3]
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> lattice.traverse([0, 2, 3]).node
+            [0, 2, 3]
         """
         return self._node
 
@@ -237,11 +254,13 @@ class JustLattice:
     def path(self) -> List[List[int]]:
         """Current traversal history.
 
-        **Examples**
+        Returns:
+            The traversal history across the lattice
 
-        >>> lattice = JustLattice(60)
-        >>> lattice.traverse([0, 2, 3]).path
-        [[0, 0, 0], [0, 2, 3]]
+        Examples:
+            >>> lattice = JustLattice(60)
+            >>> lattice.traverse([0, 2, 3]).path
+            [[0, 0, 0], [0, 2, 3]]
         """
         return self._path
 

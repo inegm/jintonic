@@ -283,7 +283,8 @@ class JustLatticeChord:
             Returns a copy.
 
         Examples:
-            >>> chord = JustLatticeChord(60, [0, 0, 0], [[2, 0], [0, 1], [-1, 0], [1, 0]])
+            >>> nodes = [[2, 0], [0, 1], [-1, 0], [1, 0]]
+            >>> chord = JustLatticeChord(60, [0, 0, 0], nodes)
             >>> chord.complement
             JustLatticeChord(60.0 Hz, [1/1, 16/9, 8/5, 3/2, 4/3], [45-5-9-135-15])
         """

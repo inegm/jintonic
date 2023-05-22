@@ -15,37 +15,30 @@ def tones_to_harmonic_segment(
 ) -> List[int]:
     """Converts a series of tones to a harmonic or sub-harmonic segment.
 
-    :param tones: A series of tones.
-    :param sub: When True, returns a sub-harmonic segment. Else, a harmonic
-        (overtone) segment.
+    Parameters:
+        tones: A series of tones.
+        sub: When True, returns a sub-harmonic segment. Else, a harmonic
+             (overtone) segment.
 
-    **Examples**
+    Returns:
+        The harmonic, or sub-harmonic, segment
 
-    >>> from .intervals import JustInterval
-    >>> tones = []
-    >>> tones.append(JustInterval(16, 15))
-    >>> tones.append(JustInterval(4, 3))
-    >>> tones.append(JustInterval(8, 5))
-    >>> tones_to_harmonic_segment(tones)
-    [4, 5, 6]
+    Examples:
+        >>> from .intervals import JustInterval
+        >>> tones = []
+        >>> tones.append(JustInterval(16, 15))
+        >>> tones.append(JustInterval(4, 3))
+        >>> tones.append(JustInterval(8, 5))
+        >>> tones_to_harmonic_segment(tones)
+        [4, 5, 6]
 
-    >>> tones = []
-    >>> tones.append(JustInterval(9, 5))
-    >>> tones.append(JustInterval(9, 8))
-    >>> tones.append(JustInterval(27, 20))
-    >>> tones.append(JustInterval(63, 40))
-    >>> tones_to_harmonic_segment(tones)
-    [4, 5, 6, 7]
-
-    TODO I'm not convinced this example (from p. 29) is correct, give an example
-    of a subharmonic segment that works.
-
-    >> tones = []
-    >> tones.append(JustInterval(21, 20))
-    >> tones.append(JustInterval(6, 5))
-    >> tones.append(JustInterval(7, 6))
-    >> tones_to_harmonic_segment(tones, sub=True)
-    [8, 7, 6]
+        >>> tones = []
+        >>> tones.append(JustInterval(9, 5))
+        >>> tones.append(JustInterval(9, 8))
+        >>> tones.append(JustInterval(27, 20))
+        >>> tones.append(JustInterval(63, 40))
+        >>> tones_to_harmonic_segment(tones)
+        [4, 5, 6, 7]
     """
     if sub:
         _tones = [(tone.denominator, tone.numerator) for tone in tones]
@@ -74,12 +67,15 @@ def tones_to_harmonic_segment(
 def harmonic_to_identity(harmonic: int) -> int:
     """Converts a harmonic number to its tone identity.
 
-    :param harmonic: A harmonic number
+    Paramters:
+        harmonic: A harmonic number
 
-    **Examples**
+    Returns:
+        The harmonic's tone identity
 
-    >>> harmonic_to_identity(6)
-    3
+    Examples:
+        >>> harmonic_to_identity(6)
+        3
     """
     return harmonic // (2 ** (prime_factors(harmonic).count(2)))
 
@@ -87,17 +83,20 @@ def harmonic_to_identity(harmonic: int) -> int:
 def harmonic_segment_to_identities(segment: List[int]) -> List[int]:
     """Converts a harmonic or sub-harmonic segment to its tone identities.
 
-    :param segment: A harmonic, or sub-harmonic, segment
+    Parameters:
+        segment: A harmonic, or sub-harmonic, segment
 
-    **Examples**
+    Returns:
+        The tone identities of each harmonic in a segment
 
-    >>> harmonic_segment_to_identities([4, 5, 6])
-    [1, 5, 3]
+    Examples:
+        >>> harmonic_segment_to_identities([4, 5, 6])
+        [1, 5, 3]
 
-    >>> harmonic_segment_to_identities([10, 12, 15])
-    [5, 3, 15]
+        >>> harmonic_segment_to_identities([10, 12, 15])
+        [5, 3, 15]
 
-    >>> harmonic_segment_to_identities([4, 5, 6, 7, 9])
-    [1, 5, 3, 7, 9]
+        >>> harmonic_segment_to_identities([4, 5, 6, 7, 9])
+        [1, 5, 3, 7, 9]
     """
     return [harmonic_to_identity(harmonic) for harmonic in segment]

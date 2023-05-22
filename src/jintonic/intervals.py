@@ -27,21 +27,21 @@ def primary_interval(
 ) -> JustInterval:
     """Returns the primary interval for a given prime limit.
 
-    :param prime_limit: A prime number
-    :param sub_harmonic: Whether the primary interval is a harmonic primary
-        (the default) or a sub-harmonic primary.
-    :param max_pot_exp: Maximum power of two exponent to limit iterations
+    Parameters:
+        prime_limit: A prime number
+        sub_harmonic: Whether the primary interval is a harmonic primary
+            (the default) or a sub-harmonic primary.
+        max_pot_exp: Maximum power of two exponent to limit iterations
 
-    **Examples**
+    Examples:
+        >>> primary_interval(7)
+        JustInterval(7, 4)
 
-    >>> primary_interval(7)
-    JustInterval(7, 4)
+        >>> primary_interval(19)
+        JustInterval(19, 16)
 
-    >>> primary_interval(19)
-    JustInterval(19, 16)
-
-    >>> primary_interval(3, sub_harmonic=True)
-    JustInterval(4, 3)
+        >>> primary_interval(3, sub_harmonic=True)
+        JustInterval(4, 3)
     """
     pot = 2
     exp = 2
@@ -60,13 +60,13 @@ class JustInterval:
     def __init__(self, numerator: int, denominator: int):
         """Initializes a JustInterval.
 
-        :param numerator: Numerator
-        :param denominator: Denominator
+        Parameters:
+            numerator: Numerator
+            denominator: Denominator
 
-        **Examples**
-
-        >>> JustInterval(4, 3)
-        JustInterval(4, 3)
+        Examples:
+            >>> JustInterval(4, 3)
+            JustInterval(4, 3)
         """
         if not (isinstance(numerator, int) and isinstance(denominator, int)):
             msg = "Both components must be integers. "
@@ -99,19 +99,22 @@ class JustInterval:
     def from_string(cls, interval: str) -> JustInterval:
         """Creates a JustInterval from a string representation.
 
-        :param interval: A string representation of an interval in the
-            `numerator:denominator` format.
+        Parameters:
+            interval: A string representation of an interval in the
+                `numerator:denominator` format.
 
-        **Examples**
+        Returns:
+            A JustInterval
 
-        >>> JustInterval.from_string('3:2')
-        JustInterval(3, 2)
+        Examples:
+            >>> JustInterval.from_string('3:2')
+            JustInterval(3, 2)
 
-        >>> JustInterval.from_string('3:3')
-        JustInterval(1, 1)
+            >>> JustInterval.from_string('3:3')
+            JustInterval(1, 1)
 
-        >>> JustInterval.from_string('6:3')
-        JustInterval(2, 1)
+            >>> JustInterval.from_string('6:3')
+            JustInterval(2, 1)
         """
         re_match = _RATIO_FORMAT.match(interval)
         if re_match is None:
@@ -129,13 +132,16 @@ class JustInterval:
     def from_two_hertz(cls, apitch: float, bpitch: float) -> JustInterval:
         """Creates a JustInterval from two Hertz values.
 
-        :param apitch: A value in Hertz (which will be truncated to an int)
-        :param bpitch: A value in Hertz (which will be truncated to an int)
+        Parameters:
+            apitch: A value in Hertz (which will be truncated to an int)
+            bpitch: A value in Hertz (which will be truncated to an int)
 
-        **Examples**
+        Returns:
+            A JustInterval
 
-        >>> JustInterval.from_two_hertz(220, 440)
-        JustInterval(2, 1)
+        Examples:
+            >>> JustInterval.from_two_hertz(220, 440)
+            JustInterval(2, 1)
         """
         smaller = apitch if apitch <= bpitch else bpitch
         greater = apitch if apitch > bpitch else bpitch
@@ -150,19 +156,22 @@ class JustInterval:
     ) -> List[JustInterval]:
         """Divides a just interval into intervals that respect a prime limit.
 
-        :param divisor: Number of divisions.
-        :param prime_limit: The prime limit, a prime number.
-        :param max_iterations: A limit to how many divisions this method will
-            try before giving up on dividing within the prime limit.
+        Parameters:
+            divisor: Number of divisions.
+            prime_limit: The prime limit, a prime number.
+            max_iterations: A limit to how many divisions this method will
+                try before giving up on dividing within the prime limit.
 
-        **Examples**
+        Returns:
+            The resulting JustIntervals
 
-        >>> JustInterval(2, 1).divisions(4, 5)
-        [JustInterval(10, 9), JustInterval(9, 8), JustInterval(6, 5),
-        JustInterval(4, 3)]
+        Examples:
+            >>> JustInterval(2, 1).divisions(4, 5)
+            [JustInterval(10, 9), JustInterval(9, 8), JustInterval(6, 5),
+            JustInterval(4, 3)]
 
-        >>> JustInterval(16, 15).divisions(2, 31)
-        [JustInterval(32, 31), JustInterval(31, 30)]
+            >>> JustInterval(16, 15).divisions(2, 31)
+            [JustInterval(32, 31), JustInterval(31, 30)]
         """
         if not is_prime(prime_limit):
             msg = "The prime limit must be a prime number. "
@@ -214,10 +223,9 @@ class JustInterval:
     def prime_limit(self) -> int:
         """JustInterval prime limit.
 
-        **Examples**
-
-        >>> JustInterval(64, 49).prime_limit
-        7
+        Examples:
+            >>> JustInterval(64, 49).prime_limit
+            7
         """
         if self.base_octave == JustInterval(1, 1):
             return 1
@@ -230,10 +238,9 @@ class JustInterval:
     def is_superparticular(self) -> bool:
         """Superparticular just intervals are of the form x+1:x
 
-        **Examples**
-
-        >>> JustInterval(3, 2).is_superparticular
-        True
+        Examples:
+            >>> JustInterval(3, 2).is_superparticular
+            True
         """
         return self.numerator == self.denominator + 1
 
@@ -241,10 +248,9 @@ class JustInterval:
     def base_octave(self) -> JustInterval:
         """The interval within the range 1:1 to 2:1
 
-        **Examples**
-
-        >>> JustInterval.from_string('9:4').base_octave
-        JustInterval(9, 8)
+        Examples:
+            >>> JustInterval.from_string('9:4').base_octave
+            JustInterval(9, 8)
         """
         cself = deepcopy(self)
         while cself >= JustInterval(2, 1):
@@ -255,15 +261,20 @@ class JustInterval:
     def complement(self) -> JustInterval:
         """JustInterval complement.
 
-        Returns the interval which, when added to this interval, yields an
+        The interval which, when added to this interval, yields an
         octave. This only applies to intervals smaller than the octave and
         will return `NotImplemented` if self is an interval larger than an
         octave.
 
-        **Examples**
+        Returns:
+            The interval's complement
 
-        >>> JustInterval(3, 2).complement
-        JustInterval(4, 3)
+        Note:
+            Returns a copy
+
+        Examples:
+            >>> JustInterval(3, 2).complement
+            JustInterval(4, 3)
         """
         octave = JustInterval(2, 1)
         if self < octave:
@@ -276,10 +287,12 @@ class JustInterval:
     def cents(self) -> float:
         """JustInterval expressed in Cents.
 
-        **Examples**
+        Returns:
+            The interval in Cents
 
-        >>> round(JustInterval(3, 2).cents, 3)
-        701.955
+        Examples:
+            >>> round(JustInterval(3, 2).cents, 3)
+            701.955
         """
         return log(self.numerator / self.denominator, 10) * (1200 / log(2, 10))
 
@@ -312,7 +325,7 @@ class JustInterval:
     def __add__(self, other: JustInterval) -> JustInterval:
         """JustInterval addition.
 
-        **Examples**
+        Examples:
 
         >>> JustInterval(3, 2) + JustInterval(4, 3)
         JustInterval(2, 1)
@@ -326,7 +339,7 @@ class JustInterval:
     def __radd__(self, other: JustInterval) -> JustInterval:
         """JustInterval right of operator addition.
 
-        **Examples**
+        Examples:
 
         >>> sum((JustInterval(3, 2), JustInterval(4, 3)))
         JustInterval(2, 1)
@@ -338,7 +351,7 @@ class JustInterval:
     def __sub__(self, other: JustInterval) -> JustInterval:
         """JustInterval substraction.
 
-        **Examples**
+        Examples:
 
         >>> JustInterval(3, 2) - JustInterval(9, 8)
         JustInterval(4, 3)
@@ -363,7 +376,7 @@ class JustInterval:
         This is used to calculate the absolute frequency of a pitch _this_
         interval above it.
 
-        **Examples**
+        Examples:
 
         >>> 440 * JustInterval(3, 2)
         660.0
@@ -379,7 +392,7 @@ class JustInterval:
     def __pow__(self, other: int) -> JustInterval:
         """JustInterval raised to a power. Used for chaining an interval.
 
-        **Examples**
+        Examples:
 
         >>> JustInterval(3, 2) ** 3
         JustInterval(27, 8)
@@ -399,7 +412,7 @@ class JustInterval:
 
         :rtype: JustInterval
 
-        **Examples**
+        Examples:
 
         >>> JustInterval(2, 1) / 2
         [JustInterval(4, 3), JustInterval(3, 2)]

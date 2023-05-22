@@ -8,15 +8,18 @@ from typing import List
 def is_prime(number: int) -> bool:
     """States if a number is prime.
 
-    :param number: A number
+    Parameters:
+        number: A number
 
-    **Examples**
+    Returns:
+        Whether or not the number is prime
 
-    >>> is_prime(31)
-    True
+    Examples:
+        >>> is_prime(31)
+        True
 
-    >>> is_prime(42)
-    False
+        >>> is_prime(42)
+        False
     """
     for factor in range(2, number):
         if not number % factor:
@@ -27,12 +30,15 @@ def is_prime(number: int) -> bool:
 def generate_primes(limit: int) -> List[int]:
     """Generates primes up to a given limit.
 
-    :param limit: The limit.
+    Parameters:
+        limit: The limit.
 
-    **Examples**
+    Returns:
+        Primes
 
-    >>> generate_primes(31)
-    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31]
+    Examples:
+        >>> generate_primes(31)
+        [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31]
     """
     return [n for n in range(2, limit + 1) if is_prime(n)]
 
@@ -40,15 +46,18 @@ def generate_primes(limit: int) -> List[int]:
 def prime_factors(number: int) -> List[int]:
     """Finds prime factors of an integer (by trial-division).
 
-    :param number: The integer to factor
+    Parameters:
+        number: The integer to factor
 
-    **Examples**
+    Returns:
+        Prime factors
 
-    >>> prime_factors(314)
-    [2, 157]
+    Examples:
+        >>> prime_factors(314)
+        [2, 157]
 
-    >>> prime_factors(31)
-    [31]
+        >>> prime_factors(31)
+        [31]
     """
     factor = 2
     factors = []
@@ -67,14 +76,17 @@ def prime_factors(number: int) -> List[int]:
 def lcm(numbers: List[int]) -> int:
     """Least common multiple of a list of integers.
 
-    :param numbers: List of integers
+    Parameters:
+        numbers: List of integers
 
-    **Examples**
+    Returns:
+        Least common multiple
 
-    >>> lcm([15, 3, 5])
-    15
+    Examples:
+        >>> lcm([15, 3, 5])
+        15
 
-    >>> lcm([21, 6, 7])
-    42
+        >>> lcm([21, 6, 7])
+        42
     """
     return reduce(lambda x, y: x * y // gcd(x, y), numbers)
