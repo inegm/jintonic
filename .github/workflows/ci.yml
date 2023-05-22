@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+    branches: 
+      - dev
+  pull_request:
+    branches: 
+      - dev
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - run: make checks
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - run: make tests
