@@ -1,0 +1,14 @@
+# build
+build
+twine
+# checks
+black
+isort
+mypy
+pylint
+ruff
+# tests
+pytest
+# docs
+mkdocs-material
+mkdocstrings[python]

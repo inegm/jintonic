@@ -1,0 +1,31 @@
+site_name: jintonic
+repo_url: https://github.com/inegm/jintonic
+nav:
+  - about: "index.md"
+  - API:
+      - chords: "api/chords.md"
+      - harmonics: "api/harmonics.md"
+      - intervals: "api/intervals.md"
+      - lattice: "api/lattice.md"
+      - primes: "api/primes.md"
+      - scales: "api/scales.md"
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+  palette:
+    scheme: default
+    primary: black
+    accent: indigo
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            annotations_path: brief
+            show_bases: true
+            show_docstring_examples: true
