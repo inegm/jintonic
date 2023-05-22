@@ -9,19 +9,13 @@ on:
       - dev
 
 jobs:
-  checks:
+  checks_and_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
+      - run: pip install -r requirements_dev.txt
       - run: make checks
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.x
       - run: make tests
