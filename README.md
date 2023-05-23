@@ -19,3 +19,7 @@ I strongly recommend his book :
 ```
 pip install jintonic
 ```
+
+## Documentation
+
+[Full documentation is available here.](https://inegm.github.io/jintonic/)

@@ -1,4 +1,7 @@
 name: publish
+env:
+  PYPI_U: ${{ secrets.PYPI_U }}
+  PYPI_P: ${{ secrets.PYPI.P }}
 
 on:
   push:
