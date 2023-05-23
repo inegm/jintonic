@@ -17,4 +17,5 @@ jobs:
         with:
           python-version: 3.x
       - run: pip install -r requirements_dev.txt
-      - run: make release
+      - run: make build
+      - run: python -m twine upload -u $PYPI_U -p $PYPI_P dist/*
