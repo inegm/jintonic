@@ -1,7 +1,4 @@
 name: publish
-env:
-  PYPI_U: ${{ secrets.PYPI_U }}
-  PYPI_P: ${{ secrets.PYPI.P }}
 
 on:
   push:
@@ -9,8 +6,14 @@ on:
       - master
 
 jobs:
-  build-and-publish:
+  pypi-publish:
+    name: Upload release to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/jintonic
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -18,4 +21,5 @@ jobs:
           python-version: 3.x
       - run: pip install -r requirements_dev.txt
       - run: make build
-      - run: python -m twine upload -u $PYPI_U -p $PYPI_P dist/*
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
