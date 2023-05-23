@@ -45,4 +45,4 @@ package:
 
 publish:
 	echo "- Publishing distribution to PyPI ..."
-	python -m twine upload dist/*
+	python -m twine upload -u $(PYPI_U) -p $(PYPI_P) dist/*
