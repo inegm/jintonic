@@ -17,9 +17,16 @@ theme:
     - navigation.sections
     - navigation.expand
   palette:
-    scheme: default
-    primary: black
-    accent: indigo
+    - scheme: default
+      primary: white
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
 plugins:
   - search
   - mkdocstrings:
